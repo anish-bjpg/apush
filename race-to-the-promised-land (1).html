@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Race to the Promised Land – APUSH Review Game</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Libre+Franklin:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#e8edf4;--card:#fff;--ink:#14213d;--mute:#56627a;--brass:#9a5f0c;--brassbg:#f6e7c8;--line:#c3ccdb;--bad:#b3261e;--good:#0b7d6e;--t0:#9a5f0c;--t1:#0b7d6e;--t2:#7a3d91;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1524;--card:#18223a;--ink:#eef1f8;--mute:#a3aec6;--brass:#f0b84a;--brassbg:#3a2d12;--line:#2c3a58;--bad:#ff8a80;--good:#4fd6c3;--t0:#f0b84a;--t1:#4fd6c3;--t2:#d19bf0;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1524;--card:#18223a;--ink:#eef1f8;--mute:#a3aec6;--brass:#f0b84a;--brassbg:#3a2d12;--line:#2c3a58;--bad:#ff8a80;--good:#4fd6c3;--t0:#f0b84a;--t1:#4fd6c3;--t2:#d19bf0;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Libre Franklin",system-ui,sans-serif}
+main{max-width:960px;margin:0 auto;padding:18px 14px 44px}
+h1{font:400 clamp(1.9rem,6vw,2.9rem)/1.05 "Abril Fatface",Georgia,serif;margin:6px 0}
+h2{font:400 1.6rem/1.15 "Abril Fatface",Georgia,serif;margin:0 0 8px}
+p{margin:0 0 10px}.mute{color:var(--mute)}
+.card{background:var(--card);border:2px solid var(--ink);border-radius:6px;padding:16px;margin:12px 0;box-shadow:5px 5px 0 var(--ink)}
+button{font:600 1rem "Libre Franklin",sans-serif;background:var(--ink);color:var(--bg);border:2px solid var(--ink);border-radius:4px;padding:12px 16px;cursor:pointer;min-height:46px}
+button.alt{background:var(--card);color:var(--ink)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+button:hover{filter:brightness(1.12)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.row>*{flex:1 1 130px}
+input[type=text]{font:inherit;width:100%;padding:10px;border:2px solid var(--line);border-radius:4px;background:var(--bg);color:var(--ink);margin:4px 0}
+.board{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.c{position:relative;min-height:74px;border:2px solid var(--line);border-radius:4px;padding:4px 5px;background:var(--card);font-size:.72rem;line-height:1.2}
+.c i{font-style:normal;font-weight:700;color:var(--mute);font-size:.7rem}
+.c.ev{border-color:var(--brass);background:var(--brassbg)}
+.c.fin{border-color:var(--good);border-width:3px}
+.c span{display:block;font-weight:600}
+.tk{display:flex;gap:2px;position:absolute;right:3px;bottom:3px}
+.tk b{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;background:var(--tc);color:var(--card)}
+.teams{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.team{flex:1 1 150px;padding:8px 10px;border:2px solid var(--line);border-radius:4px;border-left:8px solid var(--tc);background:var(--card)}
+.team.on{border-color:var(--tc);box-shadow:4px 4px 0 var(--tc)}
+.team b{display:block}.team small{color:var(--mute)}
+.tag{display:inline-block;font-weight:700;font-size:.8rem;padding:2px 8px;border-radius:99px;background:var(--brassbg);color:var(--brass)}
+.big{font:400 clamp(1.3rem,3.6vw,1.9rem)/1.25 "Abril Fatface",Georgia,serif}
+.ans{background:var(--brassbg);border:2px dashed var(--brass);padding:14px;border-radius:6px;margin-top:10px;font-weight:600;font-size:1.1rem}
+.good{color:var(--good);font-weight:700}.bad{color:var(--bad);font-weight:700}
+@media (max-width:560px){.c{min-height:62px;font-size:.62rem}.tk b{width:18px;height:18px;font-size:.62rem}}
+@media (prefers-reduced-motion:no-preference){.card{animation:pop .18s ease-out}@keyframes pop{from{transform:translateY(4px);opacity:.5}}}
+.board{grid-template-columns:repeat(6,1fr)}.cr{font-size:.8rem;color:var(--mute)}.cr b{color:var(--ink)}.sub{font-size:.8rem;color:var(--mute)}
+.board{grid-template-columns:repeat(10,1fr)}main{max-width:1180px}.c{min-height:98px;font-size:.62rem}.c span{line-height:1.15}.tn{font-size:.5rem;line-height:1.2;color:var(--mute);margin-top:3px;font-weight:400}.tn u{text-decoration:none;font-weight:700}.tk{top:3px;bottom:auto}.tk b{width:18px;height:18px;font-size:.62rem}@media (max-width:700px){.board{grid-template-columns:repeat(5,1fr)}.c{min-height:92px}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+// [tier 1 easy/2 medium/3 hard, question, answer]. Asked in this fixed order; question numbers match the answer key.
+var Q=[
+[1,"Which reformer crusaded for state-built mental hospitals?","Dorothea Dix"],
+[1,"Who led the common (free public) school movement as head of the Massachusetts Board of Education?","Horace Mann"],
+[1,"Which state was the first to ban liquor, in 1851?","Maine"],
+[1,"Which 1848 convention issued the Declaration of Sentiments?","The Seneca Falls Convention"],
+[1,"Who founded the Church of Jesus Christ of Latter-Day Saints (Mormons) in 1830?","Joseph Smith"],
+[1,"Who led the Mormons west to the Great Salt Lake in Utah?","Brigham Young"],
+[1,"Which transcendentalist wrote “The American Scholar” and urged self-reliance?","Ralph Waldo Emerson"],
+[1,"Which book (1854) came from Thoreau’s two years living simply in the woods?","Walden"],
+[1,"Which radical abolitionist newspaper did William Lloyd Garrison start in 1831?","The Liberator"],
+[1,"Who coined the phrase “manifest destiny” in 1845?","John L. O’Sullivan"],
+[1,"Which Mexican general led the attack on the Alamo?","Antonio López de Santa Anna"],
+[1,"Where did the overland trails usually begin?","St. Joseph or Independence, Missouri (or Council Bluffs, Iowa)"],
+[1,"What was discovered in California in 1848 that set off a mass migration?","Gold"],
+[1,"Name one mountain man who opened the Far West.","Jim Beckwourth, Jim Bridger, Kit Carson, or Jedediah Smith"],
+[1,"Which president led the U.S. into the Mexican War in 1846?","James K. Polk"],
+[1,"Which treaty ended the Mexican War in 1848?","The Treaty of Guadalupe Hidalgo"],
+[1,"About how many people lived in California by 1860, up from 14,000 in 1848?","About 380,000"],
+[2,"Who started Brook Farm, and what was its goal?","George Ripley; a more natural union of intellectual and manual labor"],
+[2,"Why was the Oneida Community controversial, and what did it sell?","Planned reproduction and communal child-rearing (“free love”); silverware"],
+[2,"Why did the Shaker communities die out?","They practiced celibacy, so they had no new recruits"],
+[2,"Which Thoreau essay urged refusing unjust laws, and who did it later inspire?","“On Civil Disobedience”; Gandhi and Martin Luther King Jr."],
+[2,"Which preacher held revivals in upstate New York starting in 1823?","Charles G. Finney"],
+[2,"Which antislavery newspaper did Frederick Douglass start in 1847?","The North Star"],
+[2,"What famous sentence did the Declaration of Sentiments (1848) borrow and change?","“All men and women are created equal”"],
+[2,"Which state led prison reform with penitentiaries and solitary confinement?","Pennsylvania"],
+[2,"What was Santa Anna forced to do after losing the Battle of San Jacinto?","Sign a treaty recognizing Texas independence"],
+[2,"What did the Wilmot Proviso propose, and what happened to it?","Ban slavery in lands won from Mexico; it passed the House twice but died in the Senate"],
+[2,"What did the U.S. get in the Treaty of Guadalupe Hidalgo, and what did it pay?","California and New Mexico (the Mexican Cession); $15 million"],
+[2,"What was the Gadsden Purchase and why was it made?","Southern Arizona/New Mexico for $10 million, for a southern railroad"],
+[2,"What was Polk’s campaign slogan, and what kind of candidate was he?","“Fifty-four Forty or Fight!”; the first dark horse"],
+[2,"Why did Jackson and Van Buren put off annexing Texas?","Northerners opposed adding a slave state, and annexation risked war with Mexico"],
+[2,"How did the U.S. and Britain settle the Oregon dispute in 1846?","They divided the territory at the 49th parallel"],
+[2,"What was the Webster-Ashburton Treaty (1842)?","It split the disputed Maine boundary between Maine and British Canada"],
+[2,"What was the “Great American Desert”?","The dry region between the Mississippi Valley and the Pacific Coast"],
+[3,"How did the Auburn prison system differ from Pennsylvania’s?","Rigid discipline and work with moral instruction, not solitary confinement"],
+[3,"What does the “cult of domesticity” describe?","Women as the moral leaders of the home, as men took jobs outside it"],
+[3,"What happened in Nat Turner’s 1831 revolt, and what was its effect on the South?","55 whites were killed; it ended antislavery talk in the South"],
+[3,"Where were the Amana Colonies, and who founded them?","Iowa; German Pietists"],
+[3,"What was the American Colonization Society’s goal, and what was its result?","Send freed slaves to Liberia; only about 12,000 went by 1860"],
+[3,"The Second Great Awakening was a reaction against which Enlightenment belief?","Rationalism (belief in human reason)"],
+[3,"Which sisters wrote the Letter on the Condition of Women and the Equality of the Sexes (1837)?","Sarah and Angelina Grimké"],
+[3,"What Mormon practice aroused the hostility of the U.S. government?","Polygamy (a man having more than one wife)"],
+[3,"What was the Ostend Manifesto, and why was it dropped?","A plan to buy Cuba for $100 million; it leaked and antislavery Northerners were angry"],
+[3,"Why did some Southerners feel confident after the Panic of 1857?","Cotton prices stayed high, so the South was less affected"],
+[3,"What did Matthew C. Perry’s 1854 Kanagawa Treaty do?","Opened two Japanese ports to U.S. ships"],
+[3,"What did William Walker do in 1855, and how did it end?","Took over Nicaragua; executed by Honduran authorities in 1860"],
+[3,"What did the 1850 Clayton-Bulwer Treaty say?","Neither the U.S. nor Britain would take exclusive control of a Central American canal"],
+[3,"What was the Aroostook War, and which treaty ended it?","A Maine–New Brunswick lumbermen’s border clash; Webster-Ashburton Treaty (1842)"],
+[3,"Who invented the sewing machine, and who demonstrated the electric telegraph in 1844?","Elias Howe; Samuel F. B. Morse"],
+[3,"Which railroad received the first federal land grant in 1850?","The Illinois Central (Lake Michigan to the Gulf of Mexico)"],
+[3,"Why did San Francisco and Denver become instant cities?","The gold and silver rushes"]
+];
+// Special spaces: [space number, title, [Mormons, Shakers, Baptists]]. Each effect is [code, reason, amount]. Codes: S lose next turn, R second chance, C steal cotton (amount, default 2), T steal a teammate, N nothing.
+var EL=[
+[2,"Finney’s revival",[["R","Revival crowds give Joseph Smith a bigger audience."],["N","Curious visitors come, but few accept celibacy."],["T","Revival preaching wins converts from other groups."]]],
+[5,"Utopian experiments spread",[["R","Cooperative living is a strength."],["C","Communal living is what they do best.",2],["N","Not their way of life."]]],
+[8,"Temperance crusade",[["N","No effect."],["R","Orderly, sober living fits their villages."],["C","Preachers back the cause and win support.",1]]],
+[10,"New recruits wanted",[["T","Smith builds a growing following in New York."],["S","Celibacy means no children, so they depend on recruits and not enough join."],["R","Open revivals bring in new members each season."]]],
+[13,"Seneca Falls Convention",[["N","No effect."],["N","No effect."],["R","Reform-minded Christians back the call for change."]]],
+[16,"Antislavery crusade grows",[["N","No effect."],["N","No effect."],["C","Many Christians now see slavery as a sin and rally to preachers.",2]]],
+[19,"Public schools spread",[["N","No effect."],["R","Orderly, disciplined communities do well."],["N","No effect."]]],
+[22,"Hostility from neighbors",[["S","Anger over polygamy and a mob in Illinois force them to regroup."],["N","Their quiet, separate communities draw little trouble."],["N","Large camp meetings draw crowds, not mobs."]]],
+[25,"Texas annexed",[["R","More western land to settle."],["N","No effect."],["N","No effect."]]],
+[28,"Mexican War begins",[["C","New western land opens for settlement.",1],["N","No effect."],["T","Soldiers and settlers moving west join congregations."]]],
+[31,"Oregon Trail shortcut",[["C","Organized wagon companies carry extra supplies.",1],["N","They stay in their settled communities."],["R","Circuit preachers know the frontier roads."]]],
+[34,"Gold rush fever",[["C","Supplying travelers pays off.",2],["N","They stay put."],["S","Members drift off to the gold fields."]]],
+[37,"Mountain man guides you",[["R","Trappers show them trails to the Great Salt Lake."],["N","They are not heading west."],["C","Preachers follow the frontier with the pioneers.",2]]],
+[40,"Disease strikes the trail",[["N","Organized, cooperative companies handle it."],["S","A small group with few recruits cannot easily replace its losses."],["S","Illness strikes the preachers on the road."]]],
+[43,"Panic of 1857",[["C","Their cooperative community prospers while others struggle.",3],["R","Property held in common cushions the shock."],["S","Midwestern farmers lose money and can’t support the preachers."]]],
+[45,"Gadsden Purchase",[["C","Railroad lands open to settlement.",2],["N","No effect."],["S","Settlers scatter across the new lands."]]],
+[47,"Railroads boom",[["S","Railroads bring outsiders into their territory."],["C","Their orderly, shared economy sells goods to new markets.",1],["R","Trains carry preachers to new towns."]]],
+[49,"Camp meeting boom",[["N","No effect on them."],["C","Their orderly, shared economy produces a surplus.",2],["T","Baptists and Methodists were the largest denominations by 1850."]]]];
+var EV={};EL.forEach(function(e){EV[e[0]]=[e[1],e[2]]});
+function tiny(ev){return ev[1].map(function(f,j){var c=f[0],x=c=="S"?"skip turn":c=="R"?"2nd chance":c=="C"?"steal "+(f[2]||2):c=="T"?"steal student":"nothing";return '<u style="color:var(--t'+j+')">'+esc(G.t[j].n.replace(/^The /,"").charAt(0))+'</u> '+x}).join('<br>')}
+var CELLS=50,CR=["Corn","Wheat","Cotton"],DEF=["The Mormons","The Shakers","The Baptists"],names=DEF.slice(),mem=8,app=document.getElementById("app"),G=null,T=[[],[],[]];
+Q.forEach(function(q,i){T[q[0]-1].push(i)});
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function pts(t){return t.c}
+function setup(){
+ app.innerHTML='<h1>Race to the Promised Land</h1><p class="mute">Antebellum reform and expansion review, Chapters 11 and 12. This game never ends. Answer questions to earn cotton: Easy = 1 cotton, Medium = 2, Hard = 3. Correct answers also move your token around the loop, and special spaces can help or hurt each team. Press End game when time is up.</p><div class="card"><h2>Teams</h2>'+
+ [0,1,2].map(function(i){return '<input type="text" maxlength="28" data-i="'+i+'" value="'+esc(names[i])+'" aria-label="Team '+(i+1)+' name">'}).join('')+'<div class="row"><button data-a="start">Start the game</button></div></div>';
+}
+function start(){
+ document.querySelectorAll("input[data-i]").forEach(function(i){names[+i.dataset.i]=i.value.trim()||DEF[+i.dataset.i]});
+ 
+ G={t:names.map(function(n){return{n:n,p:0,c:0,skip:0,r:0,k:0}}),cur:0,ph:"pick",i:[0,0,0],q:null,note:"",msg:"",sec:false};draw();
+}
+function boardHTML(){
+ var h='<div class="board">';
+ for(var i=0;i<CELLS;i++){var ev=EV[i];
+  var tk=G.t.map(function(t,j){return t.p==i?'<b style="--tc:var(--t'+j+')">'+esc(t.n.replace(/^The /,"").charAt(0))+'</b>':""}).join("");
+  h+='<div class="c'+(ev?' ev':'')+'"><i>'+(i==0?"Start":i)+'</i><span>'+(ev?esc(ev[0]):"")+'</span>'+(ev?'<div class="tn">'+tiny(ev)+'</div>':'')+'<div class="tk">'+tk+'</div></div>';}
+ return h+'</div>';
+}
+function teamsHTML(){
+ return '<div class="teams">'+G.t.map(function(t,j){return '<div class="team'+(j==G.cur?' on':'')+'" style="--tc:var(--t'+j+')"><b>'+esc(t.n)+'</b><div class="cr">Cotton: <b>'+t.c+'</b></div><small>'+[t.skip?'Loses next turn':'',t.r?'Second chance ready':''].filter(Boolean).join(' · ')+'</small></div>'}).join('')+'</div>';
+}
+function draw(){
+ var t=G.t[G.cur],top='<div class="row" style="margin:0"><button class="alt" data-a="end" style="min-height:36px;padding:6px 12px">End game</button><button class="alt" data-a="reset" style="min-height:36px;padding:6px 12px">Restart</button></div>',p="";
+ if(G.ph=="pick"){
+  p='<div class="card">'+(G.note?'<p class="bad">'+esc(G.note)+'</p>':'')+'<h2>'+esc(t.n)+', your turn</h2><p>The whole team answers together. Pick your difficulty.</p><div class="row"><button data-a="tier" data-v="1">Easy: 1 cotton</button><button data-a="tier" data-v="2">Medium: 2 cotton</button><button data-a="tier" data-v="3">Hard: 3 cotton</button></div></div>';
+ }else if(G.ph=="q"){
+  p='<div class="card"><span class="tag">'+["Easy","Medium","Hard"][G.q[0]-1]+' · Question #'+(G.qi+1)+(G.sec?' · Second chance':'')+'</span><p class="big" style="margin-top:10px">'+esc(G.q[1])+'</p>'+(G.show?'<div class="ans">'+esc(G.q[2])+'</div><div class="row"><button data-a="right">Correct</button><button class="alt" data-a="wrong">Incorrect</button></div>':'<div class="row"><button data-a="show">Show answer</button></div>')+'</div>';
+ }else if(G.ph=="res"){
+  p='<div class="card">'+G.msg+'<div class="row"><button data-a="next">Next team</button></div></div>';
+ }else{
+  var o=G.t.slice().sort(function(a,b){return pts(b)-pts(a)});
+  p='<div class="card"><h2>'+esc(o[0].n)+' lead the harvest</h2>'+o.map(function(x,i){return '<p><b>'+(i+1)+'. '+esc(x.n)+'</b>: '+pts(x)+' cotton</p>'}).join('')+'<div class="row"><button data-a="keep">Keep playing</button><button class="alt" data-a="reset">New game</button></div></div>';
+ }
+ app.innerHTML=top+teamsHTML()+p+(G.ph=="end"?'':boardHTML());
+}
+function tier(n,sec){var l=T[n-1],k=l[G.i[n-1]++%l.length];G.qi=k;G.q=Q[k];G.sec=!!sec;G.show=false;G.ph="q";draw()}
+function result(ok){
+ var t=G.t[G.cur],n=G.q[0],m="";t.k++;
+ if(!ok){
+  if(t.r){t.r=0;tier(n,true);return}
+  m='<p class="bad">Incorrect. No cotton this turn.</p>';
+ }else{
+  t.c+=n;t.p=(t.p+n)%CELLS;
+  m='<p class="good">Correct! '+esc(t.n)+' earn '+n+' cotton and move '+n+' space'+(n>1?'s':'')+'.</p>';
+  var ev=EV[t.p];
+  if(ev){var f=ev[1][G.cur],c=f[0];m+='<p><span class="tag">Special space</span> <b>'+esc(ev[0])+'</b></p><p>'+esc(f[1])+'</p>';
+   if(c=="S"){t.skip=1;m+='<p class="bad">Lose your next turn.</p>'}
+   else if(c=="R"){t.r=1;m+='<p class="good">Second chance: if you miss your next question, you get another one.</p>'}
+   else if(c=="C"){var v=null,b=0;G.t.forEach(function(o,j){if(j!=G.cur&&pts(o)>b){b=pts(o);v=o}});
+    if(v){var k=Math.min(f[2]||2,v.c);v.c-=k;t.c+=k;m+='<p class="good">Steal cotton! '+esc(t.n)+' take '+k+' cotton from '+esc(v.n)+(k<(f[2]||2)?' (all they had, so they never go below zero)':'')+'.</p>'}else m+='<p class="sub">No cotton to steal yet.</p>'}
+   else if(c=="T"){var w=null,s=-1;G.t.forEach(function(o,j){if(j!=G.cur&&pts(o)>s){s=pts(o);w=o}});
+    m+='<p class="good">Steal a teammate! One student from '+esc(w.n)+' joins '+esc(t.n)+'. Move them now.</p>'}
+   else m+='<p class="sub">No effect.</p>';}
+ }
+ G.msg=m;G.ph="res";draw();
+}
+function next(){
+ var s="";do{G.cur=(G.cur+1)%3;var t=G.t[G.cur];if(t.skip){t.skip=0;s+=t.n+" skip this turn. ";continue}break}while(true);
+ G.note=s;G.ph="pick";draw();
+}
+app.addEventListener("click",function(e){
+ var b=e.target.closest("button");if(!b)return;var a=b.dataset.a;
+ if(a=="start")start();else if(a=="tier")tier(+b.dataset.v);else if(a=="show"){G.show=true;draw()}
+ else if(a=="right")result(true);else if(a=="wrong")result(false);else if(a=="next")next();
+ else if(a=="end"){G.ph="end";draw()}else if(a=="keep"){G.ph="pick";draw()}else if(a=="reset")setup();
+});
+setup();
+</script>
+</body>
+</html>
