@@ -44,93 +44,227 @@ input[type=text]{font:inherit;width:100%;padding:10px;border:2px solid var(--lin
 @media (prefers-reduced-motion:no-preference){.card{animation:pop .18s ease-out}@keyframes pop{from{transform:translateY(4px);opacity:.5}}}
 .board{grid-template-columns:repeat(6,1fr)}.cr{font-size:.8rem;color:var(--mute)}.cr b{color:var(--ink)}.sub{font-size:.8rem;color:var(--mute)}
 .board{grid-template-columns:repeat(10,1fr)}main{max-width:1180px}.c{min-height:98px;font-size:.62rem}.c span{line-height:1.15}.tn{font-size:.5rem;line-height:1.2;color:var(--mute);margin-top:3px;font-weight:400}.tn u{text-decoration:none;font-weight:700}.tk{top:3px;bottom:auto}.tk b{width:18px;height:18px;font-size:.62rem}@media (max-width:700px){.board{grid-template-columns:repeat(5,1fr)}.c{min-height:92px}}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}@media (max-width:600px){.choices{grid-template-columns:1fr}}
+button.ch{background:var(--card);color:var(--ink);text-align:left;display:flex;gap:10px;align-items:flex-start;font-size:1.05rem;padding:12px 14px}
+button.ch .L{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:var(--card);font-weight:700}
+button.ch.ok{background:var(--good);border-color:var(--good);color:var(--card)}button.ch.no{background:var(--bad);border-color:var(--bad);color:var(--card)}
+button.ch.ok .L,button.ch.no .L{background:var(--card);color:var(--ink)}button.ch:disabled{cursor:default;filter:none}button.ch.dim{opacity:.55}
+.c.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--card))}.c.dbl{border-color:var(--good);background:color-mix(in srgb,var(--good) 16%,var(--card))}
 </style>
 </head>
 <body>
 <main id="app"></main>
 <script>
-// [tier 1 easy/2 medium/3 hard, question, answer]. Asked in this fixed order; question numbers match the answer key.
+// [tier 1 easy/2 medium/3 hard, question, [choice A, B, C, D], index of correct choice (0=A,1=B,2=C,3=D)]. Asked in this fixed order; question numbers match the answer key.
 var Q=[
-[1,"Which reformer crusaded for state-built mental hospitals?","Dorothea Dix"],
-[1,"Who led the common (free public) school movement as head of the Massachusetts Board of Education?","Horace Mann"],
-[1,"Which state was the first to ban liquor, in 1851?","Maine"],
-[1,"Which 1848 convention issued the Declaration of Sentiments?","The Seneca Falls Convention"],
-[1,"Who founded the Church of Jesus Christ of Latter-Day Saints (Mormons) in 1830?","Joseph Smith"],
-[1,"Who led the Mormons west to the Great Salt Lake in Utah?","Brigham Young"],
-[1,"Which transcendentalist wrote “The American Scholar” and urged self-reliance?","Ralph Waldo Emerson"],
-[1,"Which book (1854) came from Thoreau’s two years living simply in the woods?","Walden"],
-[1,"Which radical abolitionist newspaper did William Lloyd Garrison start in 1831?","The Liberator"],
-[1,"Who coined the phrase “manifest destiny” in 1845?","John L. O’Sullivan"],
-[1,"Which Mexican general led the attack on the Alamo?","Antonio López de Santa Anna"],
-[1,"Where did the overland trails usually begin?","St. Joseph or Independence, Missouri (or Council Bluffs, Iowa)"],
-[1,"What was discovered in California in 1848 that set off a mass migration?","Gold"],
-[1,"Name one mountain man who opened the Far West.","Jim Beckwourth, Jim Bridger, Kit Carson, or Jedediah Smith"],
-[1,"Which president led the U.S. into the Mexican War in 1846?","James K. Polk"],
-[1,"Which treaty ended the Mexican War in 1848?","The Treaty of Guadalupe Hidalgo"],
-[1,"About how many people lived in California by 1860, up from 14,000 in 1848?","About 380,000"],
-[2,"Who started Brook Farm, and what was its goal?","George Ripley; a more natural union of intellectual and manual labor"],
-[2,"Why was the Oneida Community controversial, and what did it sell?","Planned reproduction and communal child-rearing (“free love”); silverware"],
-[2,"Why did the Shaker communities die out?","They practiced celibacy, so they had no new recruits"],
-[2,"Which Thoreau essay urged refusing unjust laws, and who did it later inspire?","“On Civil Disobedience”; Gandhi and Martin Luther King Jr."],
-[2,"Which preacher held revivals in upstate New York starting in 1823?","Charles G. Finney"],
-[2,"Which antislavery newspaper did Frederick Douglass start in 1847?","The North Star"],
-[2,"What famous sentence did the Declaration of Sentiments (1848) borrow and change?","“All men and women are created equal”"],
-[2,"Which state led prison reform with penitentiaries and solitary confinement?","Pennsylvania"],
-[2,"What was Santa Anna forced to do after losing the Battle of San Jacinto?","Sign a treaty recognizing Texas independence"],
-[2,"What did the Wilmot Proviso propose, and what happened to it?","Ban slavery in lands won from Mexico; it passed the House twice but died in the Senate"],
-[2,"What did the U.S. get in the Treaty of Guadalupe Hidalgo, and what did it pay?","California and New Mexico (the Mexican Cession); $15 million"],
-[2,"What was the Gadsden Purchase and why was it made?","Southern Arizona/New Mexico for $10 million, for a southern railroad"],
-[2,"What was Polk’s campaign slogan, and what kind of candidate was he?","“Fifty-four Forty or Fight!”; the first dark horse"],
-[2,"Why did Jackson and Van Buren put off annexing Texas?","Northerners opposed adding a slave state, and annexation risked war with Mexico"],
-[2,"How did the U.S. and Britain settle the Oregon dispute in 1846?","They divided the territory at the 49th parallel"],
-[2,"What was the Webster-Ashburton Treaty (1842)?","It split the disputed Maine boundary between Maine and British Canada"],
-[2,"What was the “Great American Desert”?","The dry region between the Mississippi Valley and the Pacific Coast"],
-[3,"How did the Auburn prison system differ from Pennsylvania’s?","Rigid discipline and work with moral instruction, not solitary confinement"],
-[3,"What does the “cult of domesticity” describe?","Women as the moral leaders of the home, as men took jobs outside it"],
-[3,"What happened in Nat Turner’s 1831 revolt, and what was its effect on the South?","55 whites were killed; it ended antislavery talk in the South"],
-[3,"Where were the Amana Colonies, and who founded them?","Iowa; German Pietists"],
-[3,"What was the American Colonization Society’s goal, and what was its result?","Send freed slaves to Liberia; only about 12,000 went by 1860"],
-[3,"The Second Great Awakening was a reaction against which Enlightenment belief?","Rationalism (belief in human reason)"],
-[3,"Which sisters wrote the Letter on the Condition of Women and the Equality of the Sexes (1837)?","Sarah and Angelina Grimké"],
-[3,"What Mormon practice aroused the hostility of the U.S. government?","Polygamy (a man having more than one wife)"],
-[3,"What was the Ostend Manifesto, and why was it dropped?","A plan to buy Cuba for $100 million; it leaked and antislavery Northerners were angry"],
-[3,"Why did some Southerners feel confident after the Panic of 1857?","Cotton prices stayed high, so the South was less affected"],
-[3,"What did Matthew C. Perry’s 1854 Kanagawa Treaty do?","Opened two Japanese ports to U.S. ships"],
-[3,"What did William Walker do in 1855, and how did it end?","Took over Nicaragua; executed by Honduran authorities in 1860"],
-[3,"What did the 1850 Clayton-Bulwer Treaty say?","Neither the U.S. nor Britain would take exclusive control of a Central American canal"],
-[3,"What was the Aroostook War, and which treaty ended it?","A Maine–New Brunswick lumbermen’s border clash; Webster-Ashburton Treaty (1842)"],
-[3,"Who invented the sewing machine, and who demonstrated the electric telegraph in 1844?","Elias Howe; Samuel F. B. Morse"],
-[3,"Which railroad received the first federal land grant in 1850?","The Illinois Central (Lake Michigan to the Gulf of Mexico)"],
-[3,"Why did San Francisco and Denver become instant cities?","The gold and silver rushes"]
+[1, "Which reformer crusaded for state-built mental hospitals?", ["Lucretia Mott", "Catharine Beecher", "Dorothea Dix", "Horace Mann"], 2],
+[1, "Who led the common (free public) school movement as head of the Massachusetts Board of Education?", ["Noah Webster", "Horace Mann", "William Holmes McGuffey", "Dorothea Dix"], 1],
+[1, "Which state was the first to ban liquor, in 1851?", ["Maine", "New York", "Massachusetts", "Vermont"], 0],
+[1, "Which 1848 convention issued the Declaration of Sentiments?", ["The Hartford Convention", "The Nashville Convention", "The Philadelphia Convention", "The Seneca Falls Convention"], 3],
+[1, "Who founded the Church of Jesus Christ of Latter-Day Saints (Mormons) in 1830?", ["Brigham Young", "Joseph Smith", "William Miller", "Charles G. Finney"], 1],
+[1, "Who led the Mormons west to the Great Salt Lake in Utah?", ["Brigham Young", "John Humphrey Noyes", "Jedediah Smith", "Joseph Smith"], 0],
+[1, "Which transcendentalist wrote “The American Scholar” and urged self-reliance?", ["Walt Whitman", "Ralph Waldo Emerson", "Nathaniel Hawthorne", "Henry David Thoreau"], 1],
+[1, "Which book (1854) came from Thoreau’s two years living simply in the woods?", ["Leaves of Grass", "The Scarlet Letter", "Self-Reliance", "Walden"], 3],
+[1, "Which radical abolitionist newspaper did William Lloyd Garrison start in 1831?", ["The National Era", "Freedom’s Journal", "The North Star", "The Liberator"], 3],
+[1, "Who coined the phrase “manifest destiny” in 1845?", ["John L. O’Sullivan", "Stephen F. Austin", "James K. Polk", "Horace Greeley"], 0],
+[1, "Which Mexican general led the attack on the Alamo?", ["Agustín de Iturbide", "Benito Juárez", "Antonio López de Santa Anna", "Mariano Arista"], 2],
+[1, "Where did the overland trails usually begin?", ["New Orleans, Louisiana", "Independence or St. Joseph, Missouri", "St. Louis, Missouri", "Chicago, Illinois"], 1],
+[1, "What was discovered in California in 1848 that set off a mass migration?", ["Oil", "Copper", "Silver", "Gold"], 3],
+[1, "Which of these was a mountain man who opened the Far West?", ["Sam Houston", "Zachary Taylor", "Stephen F. Austin", "Jim Bridger"], 3],
+[1, "Which president led the U.S. into the Mexican War in 1846?", ["Zachary Taylor", "John Tyler", "Martin Van Buren", "James K. Polk"], 3],
+[1, "Which treaty ended the Mexican War in 1848?", ["The Adams-Onís Treaty", "The Treaty of Guadalupe Hidalgo", "The Treaty of Ghent", "The Webster-Ashburton Treaty"], 1],
+[1, "About how many people lived in California by 1860, up from 14,000 in 1848?", ["About 38,000", "About 1.5 million", "About 95,000", "About 380,000"], 3],
+[1, "What is the period before the Civil War (1861) called?", ["The Gilded Age", "The antebellum period", "The Progressive Era", "The Era of Good Feelings"], 1],
+[1, "Which religious revival movement swept the U.S. in the early 1800s?", ["The First Great Awakening", "The Enlightenment", "The Protestant Reformation", "The Second Great Awakening"], 3],
+[1, "Because of Finney’s frequent revivals, western New York became known as the…", ["“Old Northwest”", "“Bible Belt”", "“Burned-over district”", "“Great American Desert”"], 2],
+[1, "William Miller’s followers, who expected the second coming in 1844, became which denomination?", ["The Unitarians", "The Seventh-Day Adventists", "The Shakers", "The Mormons"], 1],
+[1, "Which book of scripture did Joseph Smith base his religion on?", ["Walden", "The McGuffey Reader", "The Book of Mormon", "Common Sense"], 2],
+[1, "What did the Mormons call their religious community by the Great Salt Lake?", ["Brook Farm", "The Lone Star Republic", "The New Zion", "New Harmony"], 2],
+[1, "Which artistic movement stressed intuition, feelings, and nature, and showed up in America as transcendentalism?", ["Realism", "Rationalism", "Puritanism", "Romanticism"], 3],
+[1, "Thoreau refused to pay a tax because he opposed…", ["The national bank", "The U.S. war with Mexico", "The protective tariff", "The Missouri Compromise"], 1],
+[1, "Which religious community forbade marriage and kept men and women strictly separate?", ["The Shakers", "The Oneida Community", "The Amana Colonies", "The Mormons"], 0],
+[1, "Which Welsh industrialist founded the socialist community at New Harmony, Indiana?", ["Robert Owen", "John Humphrey Noyes", "Charles Fourier", "George Ripley"], 0],
+[1, "Which group of painters showed dramatic American landscapes along the Hudson River and the frontier?", ["The Ashcan school", "The Lost Generation", "The Hudson River school", "The Harlem Renaissance"], 2],
+[1, "Who wrote The Scarlet Letter (1850)?", ["James Fenimore Cooper", "Washington Irving", "Herman Melville", "Nathaniel Hawthorne"], 3],
+[1, "Who wrote Moby-Dick, the story of Captain Ahab chasing a white whale?", ["Nathaniel Hawthorne", "Herman Melville", "Washington Irving", "Ralph Waldo Emerson"], 1],
+[1, "Which reform movement was the most popular of the era?", ["Women’s rights", "Temperance", "The peace movement", "Prison reform"], 1],
+[1, "Who opened a school for the deaf?", ["Horace Mann", "William Holmes McGuffey", "Samuel Gridley Howe", "Thomas Gallaudet"], 3],
+[1, "Samuel Gridley Howe started a school for…", ["Immigrant children", "The blind", "The deaf", "Young women"], 1],
+[1, "Who led the Texas revolt and became the first president of the Republic of Texas?", ["Sam Houston", "Stephen Austin", "John Tyler", "Zachary Taylor"], 0],
+[1, "Who brought the first 300 American families to settle in Texas?", ["Stephen Austin", "John C. Frémont", "James K. Polk", "Sam Houston"], 0],
+[1, "What is a “dark horse” candidate?", ["A war hero", "A lesser-known candidate", "A president running again", "A third-party candidate"], 1],
+[1, "Which general captured Mexico City in September 1847?", ["Winfield Scott", "Sam Houston", "Stephen Kearny", "Zachary Taylor"], 0],
+[1, "What was California called when Frémont declared it independent under a flag with a bear?", ["The Bear Flag Republic", "The New Zion", "The Lone Star Republic", "The Mexican Cession"], 0],
+[1, "What was the independent Republic of Texas nicknamed?", ["The Bear Flag Republic", "The Lone Star Republic", "The Empire State", "The Golden State"], 1],
+[1, "Which secretary of state bought Alaska in 1867?", ["William Seward", "John Slidell", "Nicholas Trist", "Daniel Webster"], 0],
+[1, "Which fast sailing ship cut the New York–San Francisco trip to as little as 89 days?", ["The steamboat", "The canal boat", "The ironclad", "The clipper ship"], 3],
+[1, "What became America’s largest industry in the 1840s–1850s?", ["Whaling", "Fur trading", "Railroads", "Textiles"], 2],
+[1, "Which reformer tried to get women to wear pantalettes instead of long skirts?", ["Margaret Fuller", "Lucretia Mott", "Susan B. Anthony", "Amelia Bloomer"], 3],
+[1, "What was the term for the belief that the U.S. had a God-given mission to spread across North America?", ["Manifest destiny", "Nullification", "The American System", "Popular sovereignty"], 0],
+[1, "What did the Treaty of Guadalupe Hidalgo set as the southern border of Texas?", ["The Red River", "The Colorado River", "The Rio Grande", "The Nueces River"], 2],
+[1, "Which mission in San Antonio did Santa Anna’s army attack, killing every American defender?", ["The Alamo", "Fort Sumter", "Buena Vista", "Goliad"], 0],
+[1, "Which country did Commodore Matthew C. Perry sail to with a fleet in the 1850s?", ["Hawaii", "China", "Japan", "Korea"], 2],
+[2, "Who started Brook Farm, and what was its goal?", ["Ann Lee; a celibate religious community", "George Ripley; a more natural union of intellectual and manual labor", "Robert Owen; a model socialist factory town", "John Humphrey Noyes; “complex marriage”"], 1],
+[2, "Why was the Oneida Community controversial, and what did it sell?", ["Polygamy; wagons", "Strict celibacy; furniture", "Refusing to pay taxes; textiles", "Planned reproduction and communal child-rearing (“free love”); silverware"], 3],
+[2, "Why did the Shaker communities die out?", ["Their factories went bankrupt", "A mob drove them out of New York", "They practiced celibacy, so they had no new generation", "They all moved to Utah"], 2],
+[2, "Which Thoreau essay urged refusing unjust laws, and who did it later inspire?", ["“The American Scholar”; Frederick Douglass", "“On Civil Disobedience”; Gandhi and Martin Luther King Jr.", "“Self-Reliance”; Abraham Lincoln", "“Walden”; John Muir"], 1],
+[2, "Which preacher held revivals in upstate New York starting in 1823?", ["Charles G. Finney", "George Whitefield", "Jonathan Edwards", "Cotton Mather"], 0],
+[2, "Which antislavery newspaper did Frederick Douglass start in 1847?", ["The Liberator", "Freedom’s Journal", "The North Star", "The National Era"], 2],
+[2, "What famous sentence did the Declaration of Sentiments (1848) borrow and change?", ["“Taxation without representation is tyranny”", "“All men and women are created equal”", "“We the People of the United States”", "“Government of the people, by the people”"], 1],
+[2, "Which state led prison reform with penitentiaries and solitary confinement?", ["Pennsylvania", "Virginia", "Massachusetts", "New York"], 0],
+[2, "What was Santa Anna forced to do after losing the Battle of San Jacinto?", ["Pay Texas $10 million", "Hand over California", "Surrender Mexico City", "Sign a treaty recognizing Texas independence"], 3],
+[2, "What did the Wilmot Proviso propose, and what happened to it?", ["Ban slavery in lands won from Mexico; passed the House but died in the Senate", "Extend the Missouri Compromise line; it became law", "Let settlers vote on slavery; it passed both houses", "Admit California as a free state; it passed"], 0],
+[2, "What did the U.S. get in the Treaty of Guadalupe Hidalgo, and what did it pay?", ["Oregon; $10 million", "Florida; $5 million", "Texas; $5 million", "California and New Mexico (the Mexican Cession); $15 million"], 3],
+[2, "What was the Gadsden Purchase and why was it made?", ["Northern Mexico for $15 million, for gold mines", "Southern Arizona/New Mexico for $10 million, for a southern railroad", "Oregon for $10 million, for a Pacific port", "The Texas panhandle for $5 million, for cattle land"], 1],
+[2, "What was Polk’s campaign slogan, and what kind of candidate was he?", ["“Tippecanoe and Tyler Too”; a war hero", "“Free Soil, Free Speech, Free Labor, Free Men”; a third-party candidate", "“Remember the Alamo”; a Texas general", "“Fifty-four Forty or Fight!”; the first dark horse"], 3],
+[2, "Why did Jackson and Van Buren put off annexing Texas?", ["Texans voted against joining", "Texas had too few settlers to be a state", "Northerners opposed adding a slave state, and annexation risked war with Mexico", "Britain had already claimed Texas"], 2],
+[2, "How did the U.S. and Britain settle the Oregon dispute in 1846?", ["They agreed to share it forever", "They divided the territory at the 49th parallel", "Britain kept all of it", "They fought a short war"], 1],
+[2, "What was the Webster-Ashburton Treaty (1842)?", ["It split the disputed Maine boundary between Maine and British Canada", "It bought Florida from Spain", "It ended the Mexican War", "It divided the Oregon Country"], 0],
+[2, "What was the “Great American Desert”?", ["The southern tip of Texas", "The salt flats around the Great Salt Lake", "Another name for the Mojave Desert", "The dry region between the Mississippi Valley and the Pacific Coast"], 3],
+[2, "Which Yale president helped start the Second Great Awakening among educated people?", ["Charles G. Finney", "Lyman Beecher", "Timothy Dwight", "Jonathan Edwards"], 2],
+[2, "Peter Cartwright was a famous example of what kind of preacher?", ["A Catholic bishop", "A Mormon missionary", "A Methodist circuit preacher", "A Unitarian professor"], 2],
+[2, "By 1850, which were the largest Protestant denominations in the U.S.?", ["Presbyterians and Episcopalians", "Quakers and Shakers", "Baptists and Methodists", "Unitarians and Congregationalists"], 2],
+[2, "What ended the Brook Farm experiment in 1849?", ["Members left for the gold rush", "A mob attack", "A federal ban", "A bad fire and heavy debts"], 3],
+[2, "Why did Robert Owen’s New Harmony fail?", ["It was destroyed in the Mexican War", "Its members practiced celibacy", "Money problems and disagreements among members", "The state of Indiana outlawed it"], 2],
+[2, "Why did the Fourier Phalanxes die out quickly?", ["They were banned by Congress", "Americans were too individualistic to live communally", "They all moved to Utah", "Their leader was murdered"], 1],
+[2, "What did the Washingtonians (1840) argue about alcoholism?", ["It was caused by immigrants", "It was a crime to be punished", "It was a disease that needed practical treatment", "It should be taxed heavily"], 2],
+[2, "What did the American Temperance Society (1826) ask drinkers to do?", ["Pay a tax on liquor", "Drink only beer and wine", "Join a utopian community", "Take a pledge of total abstinence"], 3],
+[2, "Which groups largely opposed the temperance campaign?", ["Factory owners", "German and Irish immigrants", "Protestant ministers", "Women reformers"], 1],
+[2, "Why did factory owners join the temperance reformers?", ["They owned breweries", "Congress paid them to", "Temperance could cut crime and poverty and raise worker output", "Immigrant workers asked them to"], 2],
+[2, "Why was Pennsylvania’s solitary-confinement experiment dropped?", ["It cost too much to build", "Courts ruled it illegal", "Prisoners kept escaping", "There was a high rate of prisoner suicides"], 3],
+[2, "What did the McGuffey readers teach besides reading?", ["Military drills", "Farming methods", "Morality: hard work, punctuality, and sobriety", "Latin and Greek"], 2],
+[2, "Why did Roman Catholics found their own private schools?", ["They objected to the Protestant tone of public schools", "They wanted schools only for girls", "Public schools charged high fees", "Public schools banned immigrants"], 0],
+[2, "Who founded Mount Holyoke College in 1837?", ["Mary Lyon", "Catharine Beecher", "Dorothea Dix", "Lucretia Mott"], 0],
+[2, "Which Ohio college was among the first to admit women?", ["Oberlin College", "Yale College", "Harvard College", "William & Mary"], 0],
+[2, "What were lyceums?", ["Lecture societies that brought speakers to small towns", "Private women’s colleges", "Prisons in New York", "Revival camp meetings"], 0],
+[2, "What pushed Lucretia Mott and Elizabeth Cady Stanton to campaign for women’s rights?", ["They lost their property in court", "They were barred from speaking at an antislavery convention", "They were denied college admission", "They were arrested for voting"], 1],
+[2, "Who led the campaign for women’s voting, legal, and property rights with Stanton after 1848?", ["Dorothea Dix", "Amelia Bloomer", "Mary Lyon", "Susan B. Anthony"], 3],
+[2, "Who was the Liberty party’s presidential candidate in 1840 and 1844?", ["Henry Clay", "Martin Van Buren", "James Birney", "John C. Calhoun"], 2],
+[2, "What was the Liberty party’s one campaign pledge?", ["Win women the vote", "Ban alcohol nationwide", "Annex Texas", "End slavery by political and legal means"], 3],
+[2, "Which document did Garrison burn, calling it proslavery?", ["The Missouri Compromise", "The Declaration of Independence", "The Constitution", "The Bible"], 2],
+[2, "What did William Lloyd Garrison demand?", ["Immediate abolition without paying slaveowners", "Gradual abolition with payment", "Letting each state decide", "Sending freed slaves to Liberia"], 0],
+[2, "What did David Walker and Henry Highland Garnet urge enslaved people to do?", ["Buy their own freedom", "Move to Liberia", "Wait for Congress to act", "Rise up in revolt against their owners"], 3],
+[2, "Which of these leaders helped fugitive slaves escape to the North or Canada?", ["Harriet Tubman", "Horace Mann", "John C. Calhoun", "Brigham Young"], 0],
+[2, "How did most Southerners view the reform movements?", ["As a northern threat to the southern way of life", "As a model for southern schools", "As a cure for the Panic of 1857", "As a way to strengthen slavery"], 0],
+[2, "What was phrenology?", ["A diet of whole wheat bread", "A type of revival meeting", "Studying bumps on the skull to judge character", "A method of teaching reading"], 2],
+[2, "What did the American Peace Society (1828) protest in 1846?", ["The war with Mexico", "The temperance laws", "The Second Great Awakening", "The annexation of Oregon"], 0],
+[2, "What did Cooper’s Leatherstocking Tales glorify?", ["Life in factory towns", "The southern plantation", "The frontiersman as nature’s nobleman", "Life at sea"], 2],
+[2, "What is genre painting, done by artists like George Caleb Bingham?", ["Religious scenes from the Bible", "Portraits of presidents", "Battle scenes from the Revolution", "Paintings of everyday life of ordinary people"], 3],
+[2, "Which ancient style did American architects copy to honor democracy?", ["Greek", "Egyptian", "Chinese", "Roman Gothic"], 0],
+[2, "What two laws did Mexico pass in 1829 that angered American settlers in Texas?", ["It banned guns and raised taxes", "It outlawed slavery and required converting to Catholicism", "It banned English and closed churches", "It drafted settlers and seized land"], 1],
+[2, "What did Santa Anna do in 1834 that worsened tensions with Texans?", ["Sold Texas to Britain", "Made himself dictator and abolished Mexico’s federal system", "Invaded Louisiana", "Freed all slaves in Texas"], 1],
+[2, "How did President Tyler get Texas annexed in 1845?", ["A joint resolution needing only a simple majority", "A treaty ratified by two-thirds of the Senate", "A vote of the Supreme Court", "An executive order"], 0],
+[2, "Why did Henry Clay lose the 1844 election?", ["He supported Fifty-four Forty or Fight", "He opposed the war with Mexico", "He refused to campaign", "He straddled the Texas issue and lost New York votes to the Liberty party"], 3],
+[2, "What did Polk send John Slidell to Mexico City to do?", ["Declare war on Mexico", "Buy California and New Mexico and settle the Texas border", "Buy Cuba", "Negotiate the end of the war"], 1],
+[2, "Where did Mexico say the southern border of Texas was?", ["The Nueces River", "The Red River", "The Arkansas River", "The Rio Grande"], 0],
+[2, "Which general won the Battle of Buena Vista in northern Mexico (1847)?", ["Winfield Scott", "Stephen Kearny", "John C. Frémont", "Zachary Taylor"], 3],
+[2, "Which general took Santa Fe, New Mexico, and southern California?", ["Stephen Kearny", "Sam Houston", "Zachary Taylor", "Winfield Scott"], 0],
+[2, "Which American diplomat negotiated the Treaty of Guadalupe Hidalgo?", ["John Slidell", "Nicholas Trist", "Daniel Webster", "William Seward"], 1],
+[2, "Which first-term Illinois congressman doubted Polk’s claim that American blood was shed on American soil?", ["Abraham Lincoln", "John C. Calhoun", "Stephen Douglas", "David Wilmot"], 0],
+[2, "Why did some Northerners call the 1846 Oregon treaty a sellout?", ["It removed British Columbia as a source of future free states", "It gave all of Oregon to Britain", "It allowed slavery in Oregon", "It started a war with Britain"], 0],
+[2, "What did the Preemption Acts of the 1830s and 1840s allow?", ["Miners kept all gold they found", "Slavery in the western territories", "Squatters could settle public land and buy it cheaply later", "Railroads got free land"], 2],
+[2, "Why was the overland trek west mostly a middle-class movement?", ["The poor were banned from the trails", "Only landowners could get permits", "The trip cost at least $200 to $300", "The government paid only the middle class"], 2],
+[2, "What were the most common dangers on the overland trails?", ["Bandits", "Disease and depression", "Attacks by American Indians", "Wild animals"], 1],
+[2, "About how fast did a wagon train move?", ["About 100 miles a day", "About 15 miles a day", "About 50 miles a day", "About 2 miles a day"], 1],
+[2, "By the 1860s, about what share of western miners were Chinese?", ["About one-tenth", "Over half", "Almost none", "Almost one-third"], 3],
+[2, "Why did Salt Lake City grow?", ["It had a gold rush", "It was a railroad hub", "It supplied travelers on the overland trails", "It was a navy port"], 2],
+[2, "Why did steamships replace clipper ships in the mid-1850s?", ["More cargo space, lower cost, and regular schedules", "Clipper ships were banned", "They were faster than any sailing ship", "Steam was cheaper than wind"], 0],
+[2, "What caused the whaling boom of 1830–1860?", ["The gold rush", "Demand for whale meat", "Demand for whale oil to light homes", "A navy contract"], 2],
+[3, "How did the Auburn prison system differ from Pennsylvania’s?", ["Rigid discipline and work with moral instruction, not solitary confinement", "It used solitary confinement around the clock", "It sent prisoners to work camps out West", "It held debtors apart from criminals"], 0],
+[3, "What does the “cult of domesticity” describe?", ["Women leading the temperance movement", "Women demanding the right to vote", "Women working in New England textile mills", "Women as the moral leaders of the home, as men took jobs outside it"], 3],
+[3, "What happened in Nat Turner’s 1831 revolt, and what was its effect on the South?", ["It was betrayed before it began; Charleston passed new laws", "300 enslaved people escaped to Canada; the North cheered", "55 whites were killed; it ended antislavery talk in the South", "No one was hurt; Virginia voted to end slavery"], 2],
+[3, "Where were the Amana Colonies, and who founded them?", ["New York; John Humphrey Noyes", "Utah; the Mormons", "Indiana; Robert Owen", "Iowa; German Pietists"], 3],
+[3, "What was the American Colonization Society’s goal, and what was its result?", ["Buy and free slaves; it freed about 1 million", "Settle freed slaves in the West; it founded Kansas", "Free all slaves at once; it succeeded in the North", "Send freed slaves to Liberia; only about 12,000 went by 1860"], 3],
+[3, "The Second Great Awakening was a reaction against which Enlightenment belief?", ["Nativism", "Rationalism (belief in human reason)", "Divine right of kings", "Mercantilism"], 1],
+[3, "Who wrote the Letter on the Condition of Women and the Equality of the Sexes (1837)?", ["Lucretia Mott", "Elizabeth Cady Stanton", "Margaret Fuller", "Sarah Grimké"], 3],
+[3, "What Mormon practice aroused the hostility of the U.S. government?", ["Celibacy", "Pacifism", "Polygamy (a man having more than one wife)", "Refusing to pay taxes"], 2],
+[3, "What was the Ostend Manifesto, and why was it dropped?", ["A plan to buy Alaska; Russia refused", "A secret plan to buy Cuba from Spain; it leaked and antislavery Northerners were angry", "A treaty to open Japan; Congress rejected it", "A plan to annex Canada; Britain threatened war"], 1],
+[3, "Why did some Southerners feel confident after the Panic of 1857?", ["The South had more factories than the North", "Southern banks never lent money", "The federal government bailed out planters", "Cotton prices stayed high, so the South was less affected"], 3],
+[3, "What did Matthew C. Perry’s 1854 Kanagawa Treaty do?", ["Gave the U.S. control of Hawaii", "Ended the Opium War in China", "Let the U.S. build a canal in Panama", "Opened two Japanese ports to U.S. ships"], 3],
+[3, "What did William Walker do in 1855, and how did it end?", ["Took over Nicaragua; executed by Honduran authorities in 1860", "Led settlers to Oregon; became its governor", "Bought land in Texas; became a senator", "Invaded Cuba; captured by Spain"], 0],
+[3, "What did the 1850 Clayton-Bulwer Treaty say?", ["Britain recognized Texas independence", "Neither the U.S. nor Britain would take exclusive control of a Central American canal", "The U.S. alone would build a Central American canal", "Britain gave up its claim to Oregon"], 1],
+[3, "What was the Aroostook War, and which treaty ended it?", ["A Mexican raid into Texas; Treaty of Guadalupe Hidalgo", "A clash over Oregon; Oregon Treaty", "A Seminole conflict in Florida; Adams-Onís Treaty", "A Maine–New Brunswick lumbermen’s border clash; Webster-Ashburton Treaty"], 3],
+[3, "Who invented the sewing machine, and who demonstrated the electric telegraph in 1844?", ["Eli Whitney; Cyrus McCormick", "Samuel F. B. Morse; Elias Howe", "Elias Howe; Samuel F. B. Morse", "John Deere; Robert Fulton"], 2],
+[3, "Which railroad received the first federal land grant in 1850?", ["The Erie Railroad", "The Illinois Central (Lake Michigan to the Gulf of Mexico)", "The Baltimore & Ohio", "The Union Pacific"], 1],
+[3, "Why did San Francisco and Denver become instant cities?", ["The gold and silver rushes", "They were army forts", "They were Mormon settlements", "They were railroad hubs"], 0],
+[3, "What did “Fifty-four Forty” refer to?", ["The year Polk was elected", "Texas’s northern border", "The number of states in 1844", "The latitude line between Oregon and Russian Alaska"], 3],
+[3, "Which of these was part of the U.S. claim to Oregon?", ["The Gadsden Purchase", "The Louisiana Purchase", "Captain Robert Gray’s discovery of the Columbia River", "The Treaty of Guadalupe Hidalgo"], 2],
+[3, "Which country gave up its claim to Oregon in the Adams-Onís Treaty (1819)?", ["Britain", "Russia", "Spain", "France"], 2],
+[3, "Besides Maine, the Webster-Ashburton Treaty left which resource on the U.S. side of the border?", ["The Columbia River", "The California gold fields", "The iron-rich Mesabi range (Minnesota)", "Vancouver Island"], 2],
+[3, "Why did President John Tyler push to annex Texas?", ["Mexico asked him to", "He was worried about growing British influence in Texas", "Northern Whigs demanded it", "Texas offered to pay off the national debt"], 1],
+[3, "Which two candidates deadlocked the 1844 Democratic convention?", ["Sam Houston and Stephen Austin", "Martin Van Buren and John C. Calhoun", "James K. Polk and John Tyler", "Henry Clay and Daniel Webster"], 1],
+[3, "Which 1901 treaty replaced Clayton-Bulwer and let the U.S. build a canal alone?", ["The Hay-Pauncefote Treaty", "The Webster-Ashburton Treaty", "The Adams-Onís Treaty", "The Treaty of Paris"], 0],
+[3, "Why did a few Southern Democrats dislike the Treaty of Guadalupe Hidalgo?", ["They wanted the U.S. to take all of Mexico", "They thought it gave away Texas", "They wanted slavery banned in the Cession", "They opposed paying any money"], 0],
+[3, "What had William Walker tried to take before Nicaragua?", ["Panama, in 1854", "Hawaii, in 1850", "Cuba, in 1851", "Baja California, in 1853"], 3],
+[3, "Which president sent diplomats to Ostend, Belgium, to secretly negotiate for Cuba?", ["Zachary Taylor", "Millard Fillmore", "Franklin Pierce", "James K. Polk"], 2],
+[3, "How did average family size change from 1800 to 1830?", ["It stayed the same", "It fell from about 7 to about 5.4 members", "It fell from about 10 to about 3 members", "It rose from about 5 to about 7 members"], 1],
+[3, "What did the New York Female Moral Reform Society work to do?", ["Win women the vote", "Open women’s colleges", "Keep poor young women out of prostitution", "Ban alcohol in New York"], 2],
+[3, "In Freedom’s Ferment (1944), how did Alice Tyler portray the reformers?", ["As upper-class people trying to control the poor", "As idealistic humanitarians seeking a just society", "As religious fanatics", "As agents of the Whig party"], 1],
+[3, "Revisionist historians argue many reformers wanted to control the masses. Which party did most reformers belong to?", ["The Liberty party", "The Whigs", "The Know-Nothings", "The Jacksonian Democrats"], 1],
+[3, "According to Mexican historians, how much of Mexico’s territory did the Treaty of Guadalupe Hidalgo take?", ["About one-tenth", "About half", "About one-quarter", "Nearly all of it"], 1],
+[3, "Historians who see the Mexican War as imperialism say the U.S. wanted California mainly for…", ["Its gold mines", "Farmland for immigrants", "Trade with China and Japan", "Spreading slavery"], 2],
+[3, "When did the temperance movement finally win national prohibition?", ["The Maine Law in 1851", "Never", "The 18th Amendment in 1919", "The 13th Amendment in 1865"], 2],
+[3, "About how much hard liquor did Americans drink per person in 1820?", ["About one gallon", "About half a gallon", "About twenty gallons", "About five gallons"], 3],
+[3, "By 1830, Americans in Texas outnumbered Mexicans by about…", ["Three to one", "Five to four", "Ten to one", "Two to one"], 0],
+[3, "What was the Aroostook War also called?", ["The “lumber war”", "The “battle of the maps”", "The “pig war”", "The “bloodless war”"], 1],
+[3, "How did railroads change trade for Midwest farmers in Illinois and Iowa?", ["They ended farming in the Midwest", "They tied them to the South", "They tied them to the Northeast instead of to the South by river", "They let them ship directly to Europe"], 2],
+[3, "About how many members did the Shakers have by the 1840s?", ["About 600,000", "About 60,000", "About 6,000", "About 600"], 2],
+[3, "Which church’s liberal doctrines rejected Puritan teachings on original sin and predestination?", ["The Unitarian Church", "The Catholic Church", "The Methodist Church", "The Baptist Church"], 0],
+[3, "How did the Mexican legislature react to the treaty Santa Anna signed after San Jacinto?", ["It rejected it and said Texas was still part of Mexico", "It declared war on Britain", "It approved it and recognized Texas", "It sold Texas to the U.S."], 0],
+[3, "How do some historians view the Wilmot Proviso?", ["As the end of the Mexican War", "As the start of manifest destiny", "As a victory for the South", "As the first round in the conflict that led to the Civil War"], 3],
+[3, "What happened to Cuba expeditions led by Southern adventurers in the early 1850s?", ["They captured Havana", "They were defeated and participants were executed by Spain", "Cuba joined the U.S.", "Congress approved them"], 1]
 ];
-// Special spaces: [space number, title, [Mormons, Shakers, Baptists]]. Each effect is [code, reason, amount]. Codes: S lose next turn, R second chance, C steal cotton (amount, default 2), T steal a teammate, N nothing.
+// Special spaces: [space number, title, code, reason, amount]. Every team gets the same effect.
+// Codes: S lose next turn, R second chance, C steal cotton from a team you pick, T steal a student from a team you pick,
+// D bonus question for double cotton, G gain cotton, L lose cotton.
 var EL=[
-[2,"Finney’s revival",[["R","Revival crowds give Joseph Smith a bigger audience."],["N","Curious visitors come, but few accept celibacy."],["T","Revival preaching wins converts from other groups."]]],
-[5,"Utopian experiments spread",[["R","Cooperative living is a strength."],["C","Communal living is what they do best.",2],["N","Not their way of life."]]],
-[8,"Temperance crusade",[["N","No effect."],["R","Orderly, sober living fits their villages."],["C","Preachers back the cause and win support.",1]]],
-[10,"New recruits wanted",[["T","Smith builds a growing following in New York."],["S","Celibacy means no children, so they depend on recruits and not enough join."],["R","Open revivals bring in new members each season."]]],
-[13,"Seneca Falls Convention",[["N","No effect."],["N","No effect."],["R","Reform-minded Christians back the call for change."]]],
-[16,"Antislavery crusade grows",[["N","No effect."],["N","No effect."],["C","Many Christians now see slavery as a sin and rally to preachers.",2]]],
-[19,"Public schools spread",[["N","No effect."],["R","Orderly, disciplined communities do well."],["N","No effect."]]],
-[22,"Hostility from neighbors",[["S","Anger over polygamy and a mob in Illinois force them to regroup."],["N","Their quiet, separate communities draw little trouble."],["N","Large camp meetings draw crowds, not mobs."]]],
-[25,"Texas annexed",[["R","More western land to settle."],["N","No effect."],["N","No effect."]]],
-[28,"Mexican War begins",[["C","New western land opens for settlement.",1],["N","No effect."],["T","Soldiers and settlers moving west join congregations."]]],
-[31,"Oregon Trail shortcut",[["C","Organized wagon companies carry extra supplies.",1],["N","They stay in their settled communities."],["R","Circuit preachers know the frontier roads."]]],
-[34,"Gold rush fever",[["C","Supplying travelers pays off.",2],["N","They stay put."],["S","Members drift off to the gold fields."]]],
-[37,"Mountain man guides you",[["R","Trappers show them trails to the Great Salt Lake."],["N","They are not heading west."],["C","Preachers follow the frontier with the pioneers.",2]]],
-[40,"Disease strikes the trail",[["N","Organized, cooperative companies handle it."],["S","A small group with few recruits cannot easily replace its losses."],["S","Illness strikes the preachers on the road."]]],
-[43,"Panic of 1857",[["C","Their cooperative community prospers while others struggle.",3],["R","Property held in common cushions the shock."],["S","Midwestern farmers lose money and can’t support the preachers."]]],
-[45,"Gadsden Purchase",[["C","Railroad lands open to settlement.",2],["N","No effect."],["S","Settlers scatter across the new lands."]]],
-[47,"Railroads boom",[["S","Railroads bring outsiders into their territory."],["C","Their orderly, shared economy sells goods to new markets.",1],["R","Trains carry preachers to new towns."]]],
-[49,"Camp meeting boom",[["N","No effect on them."],["C","Their orderly, shared economy produces a surplus.",2],["T","Baptists and Methodists were the largest denominations by 1850."]]]];
-var EV={};EL.forEach(function(e){EV[e[0]]=[e[1],e[2]]});
-function tiny(ev){return ev[1].map(function(f,j){var c=f[0],x=c=="S"?"skip turn":c=="R"?"2nd chance":c=="C"?"steal "+(f[2]||2):c=="T"?"steal student":"nothing";return '<u style="color:var(--t'+j+')">'+esc(G.t[j].n.replace(/^The /,"").charAt(0))+'</u> '+x}).join('<br>')}
-var CELLS=50,CR=["Corn","Wheat","Cotton"],DEF=["The Mormons","The Shakers","The Baptists"],names=DEF.slice(),mem=8,app=document.getElementById("app"),G=null,T=[[],[],[]];
+[2,"Finney’s revival","R","Revival crowds lift your spirits."],
+[4,"Burned-over district","G","Hellfire preaching wins new converts.",1],
+[6,"The world doesn’t end","S","William Miller’s prediction fails. Regroup."],
+[8,"Temperance pledge","R","Sober and focused."],
+[10,"Brook Farm burns","L","A bad fire and heavy debts.",2],
+[12,"Double points: Camp meeting","D","Thousands gather to hear the preaching."],
+[14,"Dorothea Dix’s crusade","G","States build new mental hospitals.",1],
+[16,"New Harmony collapses","L","Money problems and arguments.",1],
+[18,"Common schools spread","G","Horace Mann’s reforms pay off.",2],
+[20,"Seneca Falls Convention","T","A new voice joins your movement."],
+[22,"The Liberator","C","Garrison’s paper stirs the nation.",2],
+[24,"Double points: Oneida silverware","D","Fine silverware sells well."],
+[26,"Nat Turner’s revolt","S","Fear sweeps the South."],
+[28,"Underground Railroad","G","Harriet Tubman leads the way north.",1],
+[30,"Lyceum lecture tour","R","Emerson’s talk inspires you."],
+[32,"Mob in Illinois","L","Persecution forces a retreat.",1],
+[34,"Texas independence","C","Victory at San Jacinto.",2],
+[36,"Double points: Manifest destiny","D","O’Sullivan’s phrase spreads across the land."],
+[38,"Aroostook War","S","Lumbermen clash on the Maine border."],
+[40,"Fifty-four Forty or Fight!","T","Polk’s slogan wins supporters."],
+[42,"Oregon fever","G","Thousands head west on the Oregon Trail.",1],
+[44,"Bear Flag Republic","G","Frémont takes northern California.",2],
+[46,"War with Mexico","C","U.S. armies march to Mexico City.",3],
+[48,"Double points: Gold rush","D","Gold is found in California!"],
+[50,"Disease on the trail","S","The most common danger on the trail."],
+[52,"Snow in the Sierras","L","You miss the mountain pass before the first heavy snow.",1],
+[54,"Mountain man guide","G","Jim Bridger knows a shortcut.",1],
+[56,"Wilmot Proviso","T","The slavery fight splits Congress."],
+[58,"Clipper ship","G","New York to San Francisco in 89 days.",1],
+[60,"Railroads boom","G","Rail lines link the Midwest and Northeast.",2],
+[62,"Ostend Manifesto leaks","S","Angry Northerners force Pierce to drop the plan."],
+[64,"Walker in Nicaragua","L","Central American armies drive him out.",1],
+[66,"Double points: Perry opens Japan","D","The Kanagawa Treaty opens two ports."],
+[68,"Gadsden Purchase","C","$10 million buys land for a railroad.",2],
+[70,"Whaling boom","G","Whale oil lights American homes.",1],
+[72,"Panic of 1857","L","Prices crash in the North.",2],
+[74,"The telegraph","R","Morse’s invention speeds the news."],
+[76,"Double points: King Cotton","D","Cotton prices stay high."],
+[78,"Instant city","T","San Francisco booms overnight."]];
+var EV={};EL.forEach(function(e){EV[e[0]]={t:e[1],c:e[2],why:e[3],n:e[4]||0}});
+function tiny(ev){var n=ev.n;return {S:"Lose next turn",R:"Second chance",C:"Steal "+n+" cotton from any team",T:"Steal a student from any team",D:"Bonus question, 2× cotton",G:"Gain "+n+" cotton",L:"Lose "+n+" cotton"}[ev.c]}
+var CELLS=80,CR=["Corn","Wheat","Cotton"],DEF=["The Mormons","The Shakers","The Baptists"],names=DEF.slice(),mem=8,app=document.getElementById("app"),G=null,T=[[],[],[]];
 Q.forEach(function(q,i){T[q[0]-1].push(i)});
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function pts(t){return t.c}
 function setup(){
- app.innerHTML='<h1>Race to the Promised Land</h1><p class="mute">Antebellum reform and expansion review, Chapters 11 and 12. This game never ends. Answer questions to earn cotton: Easy = 1 cotton, Medium = 2, Hard = 3. Correct answers also move your token around the loop, and special spaces can help or hurt each team. Press End game when time is up.</p><div class="card"><h2>Teams</h2>'+
+ app.innerHTML='<h1>Race to the Promised Land</h1><p class="mute">Antebellum reform and expansion review, Chapters 11 and 12. This game never ends. Answer questions to earn cotton: Every question is multiple choice: pick A, B, C or D. Easy = 1 cotton, Medium = 2, Hard = 3. Land on a green Double Points space and you get a bonus question right away: pick Easy, Medium or Hard, and a correct answer earns double cotton (2, 4 or 6). Correct answers also move your token around the loop, and special spaces help or hurt whichever team lands on them, the same for everyone. Press End game when time is up.</p><div class="card"><h2>Teams</h2>'+
  [0,1,2].map(function(i){return '<input type="text" maxlength="28" data-i="'+i+'" value="'+esc(names[i])+'" aria-label="Team '+(i+1)+' name">'}).join('')+'<div class="row"><button data-a="start">Start the game</button></div></div>';
 }
 function start(){
@@ -142,7 +276,7 @@ function boardHTML(){
  var h='<div class="board">';
  for(var i=0;i<CELLS;i++){var ev=EV[i];
   var tk=G.t.map(function(t,j){return t.p==i?'<b style="--tc:var(--t'+j+')">'+esc(t.n.replace(/^The /,"").charAt(0))+'</b>':""}).join("");
-  h+='<div class="c'+(ev?' ev':'')+'"><i>'+(i==0?"Start":i)+'</i><span>'+(ev?esc(ev[0]):"")+'</span>'+(ev?'<div class="tn">'+tiny(ev)+'</div>':'')+'<div class="tk">'+tk+'</div></div>';}
+  var dbl=ev&&ev.c=="D",bad=ev&&"SBL".indexOf(ev.c)>=0;h+='<div class="c'+(dbl?' dbl':bad?' ev bad':ev?' ev':'')+'"><i>'+(i==0?"Start":i)+'</i><span>'+(ev?esc(ev.t):"")+'</span>'+(ev?'<div class="tn"><u>'+tiny(ev)+'</u></div>':'')+'<div class="tk">'+tk+'</div></div>';}
  return h+'</div>';
 }
 function teamsHTML(){
@@ -152,46 +286,61 @@ function draw(){
  var t=G.t[G.cur],top='<div class="row" style="margin:0"><button class="alt" data-a="end" style="min-height:36px;padding:6px 12px">End game</button><button class="alt" data-a="reset" style="min-height:36px;padding:6px 12px">Restart</button></div>',p="";
  if(G.ph=="pick"){
   p='<div class="card">'+(G.note?'<p class="bad">'+esc(G.note)+'</p>':'')+'<h2>'+esc(t.n)+', your turn</h2><p>The whole team answers together. Pick your difficulty.</p><div class="row"><button data-a="tier" data-v="1">Easy: 1 cotton</button><button data-a="tier" data-v="2">Medium: 2 cotton</button><button data-a="tier" data-v="3">Hard: 3 cotton</button></div></div>';
+ }else if(G.ph=="bpick"){
+  p='<div class="card"><span class="tag">Double points bonus</span><h2 style="margin-top:8px">'+esc(t.n)+', bonus question!</h2><p>Pick a difficulty. Get it right for double cotton. A bonus question does not move your token.</p><div class="row"><button data-a="btier" data-v="1">Easy: 2 cotton</button><button data-a="btier" data-v="2">Medium: 4 cotton</button><button data-a="btier" data-v="3">Hard: 6 cotton</button></div></div>';
  }else if(G.ph=="q"){
-  p='<div class="card"><span class="tag">'+["Easy","Medium","Hard"][G.q[0]-1]+' · Question #'+(G.qi+1)+(G.sec?' · Second chance':'')+'</span><p class="big" style="margin-top:10px">'+esc(G.q[1])+'</p>'+(G.show?'<div class="ans">'+esc(G.q[2])+'</div><div class="row"><button data-a="right">Correct</button><button class="alt" data-a="wrong">Incorrect</button></div>':'<div class="row"><button data-a="show">Show answer</button></div>')+'</div>';
+  p='<div class="card">'+(G.note2?'<p class="bad">'+esc(G.note2)+'</p>':'')+'<span class="tag">'+["Easy","Medium","Hard"][G.q[0]-1]+' · Question #'+(G.qi+1)+(G.sec?' · Second chance':'')+(G.isBonus?' · Bonus: double cotton':'')+'</span><p class="big" style="margin-top:10px">'+esc(G.q[1])+'</p>'+choicesHTML(-1)+'</div>';
  }else if(G.ph=="res"){
-  p='<div class="card">'+G.msg+'<div class="row"><button data-a="next">Next team</button></div></div>';
+  p='<div class="card"><span class="tag">Question #'+(G.qi+1)+'</span><p style="font-weight:600;margin-top:8px">'+esc(G.q[1])+'</p>'+choicesHTML(G.pick)+G.msg+'<div class="row">'+(G.steal?G.t.map(function(o,j){return j==G.cur?'':'<button data-a="steal" data-v="'+j+'"'+(o.c?'':' disabled')+'>Steal from '+esc(o.n)+' ('+o.c+')</button>'}).join(''):G.bonusNext?'<button data-a="bonus">Answer the bonus question</button>':'<button data-a="next">Next team</button>')+'</div></div>';
  }else{
   var o=G.t.slice().sort(function(a,b){return pts(b)-pts(a)});
   p='<div class="card"><h2>'+esc(o[0].n)+' lead the harvest</h2>'+o.map(function(x,i){return '<p><b>'+(i+1)+'. '+esc(x.n)+'</b>: '+pts(x)+' cotton</p>'}).join('')+'<div class="row"><button data-a="keep">Keep playing</button><button class="alt" data-a="reset">New game</button></div></div>';
  }
  app.innerHTML=top+teamsHTML()+p+(G.ph=="end"?'':boardHTML());
 }
-function tier(n,sec){var l=T[n-1],k=l[G.i[n-1]++%l.length];G.qi=k;G.q=Q[k];G.sec=!!sec;G.show=false;G.ph="q";draw()}
+function choicesHTML(pk){
+ return '<div class="choices">'+G.q[2].map(function(c,j){var cl="ch";if(pk>=0){cl+=j==G.q[3]?" ok":(j==pk||j==G.wrong)?" no":" dim"}else if(j==G.wrong)cl+=" no"
+  return '<button class="'+cl+'" data-a="pick" data-v="'+j+'"'+(pk>=0||j==G.wrong?' disabled':'')+'><span class="L">'+"ABCD"[j]+'</span><span>'+esc(c)+'</span></button>'}).join('')+'</div>';
+}
+function ansText(q){return "ABCD"[q[3]]+") "+q[2][q[3]]}
+function tier(n,sec){if(!sec)G.note2="";G.wrong=-1;var l=T[n-1],k=l[G.i[n-1]++%l.length];G.qi=k;G.q=Q[k];G.sec=!!sec;G.show=false;G.ph="q";draw()}
 function result(ok){
  var t=G.t[G.cur],n=G.q[0],m="";t.k++;
+ if(G.isBonus){G.isBonus=false;
+  if(ok){t.c+=n*2;m='<p class="good">Correct! Bonus doubled: '+esc(t.n)+' earn '+(n*2)+' cotton.</p>'}
+  else m='<p class="bad">Incorrect. The answer was '+esc(ansText(G.q))+'. No bonus cotton.</p>';
+  G.msg=m;G.ph="res";draw();return}
  if(!ok){
-  if(t.r){t.r=0;tier(n,true);return}
-  m='<p class="bad">Incorrect. No cotton this turn.</p>';
+  if(t.r){t.r=0;G.wrong=G.pick;G.sec=true;G.note2="Incorrect! Second chance: try again.";draw();return}
+  m='<p class="bad">Incorrect. The answer was '+esc(ansText(G.q))+'. No cotton this turn.</p>';
  }else{
   t.c+=n;t.p=(t.p+n)%CELLS;
   m='<p class="good">Correct! '+esc(t.n)+' earn '+n+' cotton and move '+n+' space'+(n>1?'s':'')+'.</p>';
   var ev=EV[t.p];
-  if(ev){var f=ev[1][G.cur],c=f[0];m+='<p><span class="tag">Special space</span> <b>'+esc(ev[0])+'</b></p><p>'+esc(f[1])+'</p>';
+  if(ev){var c=ev.c,n2=ev.n;m+='<p><span class="tag">Special space</span> <b>'+esc(ev.t)+'</b></p><p>'+esc(ev.why)+'</p>';
    if(c=="S"){t.skip=1;m+='<p class="bad">Lose your next turn.</p>'}
-   else if(c=="R"){t.r=1;m+='<p class="good">Second chance: if you miss your next question, you get another one.</p>'}
-   else if(c=="C"){var v=null,b=0;G.t.forEach(function(o,j){if(j!=G.cur&&pts(o)>b){b=pts(o);v=o}});
-    if(v){var k=Math.min(f[2]||2,v.c);v.c-=k;t.c+=k;m+='<p class="good">Steal cotton! '+esc(t.n)+' take '+k+' cotton from '+esc(v.n)+(k<(f[2]||2)?' (all they had, so they never go below zero)':'')+'.</p>'}else m+='<p class="sub">No cotton to steal yet.</p>'}
-   else if(c=="T"){var w=null,s=-1;G.t.forEach(function(o,j){if(j!=G.cur&&pts(o)>s){s=pts(o);w=o}});
-    m+='<p class="good">Steal a teammate! One student from '+esc(w.n)+' joins '+esc(t.n)+'. Move them now.</p>'}
-   else m+='<p class="sub">No effect.</p>';}
+   else if(c=="R"){t.r=1;m+='<p class="good">Second chance: if you miss your next question, you get to try it again.</p>'}
+   else if(c=="C"){if(G.t.some(function(o,j){return j!=G.cur&&o.c>0})){G.steal=n2;m+='<p class="good">Steal '+n2+' cotton! Pick a team to take it from.</p>'}else m+='<p class="sub">No other team has cotton to steal yet.</p>'}
+   else if(c=="T"){m+='<p class="good">Steal a student! Pick one student from any other team to join '+esc(t.n)+'. Move them now.</p>'}
+   else if(c=="D"){G.bonusNext=1;m+='<p class="good">Bonus question! Answer one more question for double cotton.</p>'}
+   else if(c=="G"){t.c+=n2;m+='<p class="good">Gain '+n2+' cotton.</p>'}
+   else if(c=="L"){var k2=Math.min(n2,t.c);t.c-=k2;m+='<p class="bad">Lose '+k2+' cotton.</p>'}
+}
  }
  G.msg=m;G.ph="res";draw();
 }
 function next(){
  var s="";do{G.cur=(G.cur+1)%3;var t=G.t[G.cur];if(t.skip){t.skip=0;s+=t.n+" skip this turn. ";continue}break}while(true);
- G.note=s;G.ph="pick";draw();
+ G.note=s;G.note2="";G.wrong=-1;G.ph="pick";draw();
 }
 app.addEventListener("click",function(e){
  var b=e.target.closest("button");if(!b)return;var a=b.dataset.a;
- if(a=="start")start();else if(a=="tier")tier(+b.dataset.v);else if(a=="show"){G.show=true;draw()}
- else if(a=="right")result(true);else if(a=="wrong")result(false);else if(a=="next")next();
- else if(a=="end"){G.ph="end";draw()}else if(a=="keep"){G.ph="pick";draw()}else if(a=="reset")setup();
+ if(a=="start")start();else if(a=="tier")tier(+b.dataset.v);
+ else if(a=="steal"&&G.steal){var v=G.t[+b.dataset.v],t=G.t[G.cur],k=Math.min(G.steal,v.c);v.c-=k;t.c+=k;G.msg+='<p class="good">'+esc(t.n)+' take '+k+' cotton from '+esc(v.n)+(k<G.steal?' (all they had)':'')+'.</p>';G.steal=0;draw()}
+ else if(a=="bonus"){G.bonusNext=0;G.ph="bpick";draw()}
+ else if(a=="btier"){G.isBonus=true;tier(+b.dataset.v)}
+ else if(a=="pick"&&G.ph=="q"&&+b.dataset.v!=G.wrong){G.pick=+b.dataset.v;result(G.pick==G.q[3])}else if(a=="next")next();
+ else if(a=="end"){G.ph="end";draw()}else if(a=="keep"){G.ph="pick";draw()}else if(a=="reset"){if(G){G.isBonus=false;G.bonusNext=0;G.steal=0}setup()}
 });
 setup();
 </script>
